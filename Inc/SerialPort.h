@@ -11,7 +11,10 @@ private:
 
     DCB portConfig;
     HANDLE handleCom;
+
     bool fSuccess;
+    DWORD errors;
+    COMSTAT status;
 
     std::string portName;
     bool connected;
@@ -41,6 +44,10 @@ public:
     void SetPortName ( std::string portName );
 
     bool IsConnected ( );
+
+    bool ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &bytesRead );
+
+    bool WriteCommPort ( const std::string &buffer, const DWORD &bytesToWrite );
 
 };
 

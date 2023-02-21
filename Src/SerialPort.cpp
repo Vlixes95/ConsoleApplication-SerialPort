@@ -5,7 +5,7 @@ void SerialPort::OpenCommPort ( ) {
 
 // TODO: Control string size
     handleCom = CreateFile( static_cast<LPCSTR>(this->portName.c_str( )),
-                       GENERIC_READ | GENERIC_WRITE,
+                            GENERIC_READ | GENERIC_WRITE,
                             0,
                             NULL,
                             OPEN_EXISTING,
@@ -20,7 +20,7 @@ void SerialPort::OpenCommPort ( ) {
 
     // Initialize the DCB structure
     /* DCB: Define the configuration of the comm port*/
-    SecureZeroMemory( &portConfig, sizeof( portConfig ));
+//    SecureZeroMemory( &portConfig, sizeof( portConfig ));
     portConfig.DCBlength = sizeof( DCB );
 
     if ( IsConnected( )) {
@@ -32,6 +32,7 @@ void SerialPort::OpenCommPort ( ) {
             PrintComPortState( );
         }
     }
+
     COMMTIMEOUTS a;
     a.ReadIntervalTimeout = 1000;
     a.ReadTotalTimeoutConstant = 1000;
@@ -66,7 +67,7 @@ bool SerialPort::GetCommPortState ( ) {
 
     fSuccess = GetCommState( handleCom, &portConfig );
     if ( !fSuccess ) {
-        printf("GetCommPort failed with error %ld.\n", GetLastError( ));
+        printf( "GetCommPort failed with error %ld.\n", GetLastError( ));
         return false;
     }
     return true;
@@ -76,8 +77,8 @@ bool SerialPort::GetCommPortState ( ) {
 bool SerialPort::SetCommPortState ( ) {
 
     fSuccess = SetCommState( handleCom, &portConfig );
-    if(!fSuccess){
-        printf( "SetCommState failed with erros %ld.\n", GetLastError());
+    if ( !fSuccess ) {
+        printf( "SetCommState failed with erros %ld.\n", GetLastError( ));
         return false;
     }
     return true;
@@ -94,4 +95,40 @@ void SerialPort::SetPortName ( std::string portName ) {
 
 bool SerialPort::IsConnected ( ) {
     return connected;
+}
+
+bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &bytesRead ) {
+
+    ClearCommError( handleCom, &errors, &status );
+    std::string a;
+    unsigned int toRead = 0;
+//    char tempBuff[4096];
+    if ( status.cbInQue > 0 ) {
+        if ( status.cbInQue > bytesToRead ) {
+            toRead = bytesToRead;
+        } else{
+            toRead = status.cbInQue;
+        }
+
+        char *tempBuff = ( char * ) malloc( toRead * sizeof( char ));
+
+        if ( !ReadFile( handleCom, tempBuff, bytesToRead, &bytesRead, NULL )) {
+            printf( "Failed reading the file\n" );
+        }
+        buffer.append(tempBuff);
+        free( tempBuff );
+        return true;
+    }
+
+    return false;
+}
+
+bool SerialPort::WriteCommPort ( const std::string &buffer, const DWORD &bytesToWrite ) {
+
+    LPDWORD bytesWritten = nullptr;
+    WriteFile( handleCom, buffer.c_str(), bytesToWrite, bytesWritten, NULL);
+    Sleep( 100 );
+    ClearCommError( handleCom, &errors, &status );
+
+    return false;
 }
