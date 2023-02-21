@@ -3,4 +3,6 @@ project(ConsoleApplication_SerialPort)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(ConsoleApplication_SerialPort main.cpp)
+include_directories( Inc )
+
+add_executable(ConsoleApplication_SerialPort Src/main.cpp Src/SerialPort.cpp Inc/SerialPort.h)
