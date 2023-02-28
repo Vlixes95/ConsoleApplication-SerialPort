@@ -102,7 +102,6 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
     ClearCommError( handleCom, &errors, &status );
     std::string a;
     unsigned int toRead = 0;
-//    char tempBuff[4096];
     if ( status.cbInQue > 0 ) {
         if ( status.cbInQue > bytesToRead ) {
             toRead = bytesToRead;
@@ -123,11 +122,12 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
     return false;
 }
 
-bool SerialPort::WriteCommPort ( const std::string &buffer, const DWORD &bytesToWrite ) {
+bool SerialPort::WriteCommPort ( const std::string &buffer, const DWORD &size ) {
 
     LPDWORD bytesWritten = nullptr;
-    WriteFile( handleCom, buffer.c_str(), bytesToWrite, bytesWritten, NULL);
-    Sleep( 100 );
+    if ( WriteFile( handleCom, buffer.c_str(), size, bytesWritten, NULL )) {
+        return true;
+    }
     ClearCommError( handleCom, &errors, &status );
 
     return false;

@@ -47,7 +47,7 @@ public:
 
     bool ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &bytesRead );
 
-    bool WriteCommPort ( const std::string &buffer, const DWORD &bytesToWrite );
+    bool WriteCommPort ( const std::string &buffer, const DWORD &size );
 
 };
 
