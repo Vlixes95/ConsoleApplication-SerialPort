@@ -4,6 +4,12 @@
 #include <vector>
 #include <iostream>
 
+const std::string READ_COMMAND = "r";
+const std::string WRITE_COMMAND = "w";
+const std::string UPDATE_COMMAND = "u";
+const std::string DELETE_COMMAND = "d";
+const std::string PRINT_COMMAND = "p";
+
 class MSGPack {
 private:
     std::string command;
