@@ -100,7 +100,7 @@ bool SerialPort::IsConnected ( ) {
 bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &bytesRead ) {
 
     ClearCommError( handleCom, &errors, &status );
-    std::string a;
+
     unsigned int toRead = 0;
     if ( status.cbInQue > 0 ) {
         if ( status.cbInQue > bytesToRead ) {
@@ -109,11 +109,12 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
             toRead = status.cbInQue;
         }
 
-        char *tempBuff = ( char * ) malloc( toRead * sizeof( char ));
+        char *tempBuff = ( char * ) malloc( toRead * sizeof( char ) + 1 );
 
         if ( !ReadFile( handleCom, tempBuff, bytesToRead, &bytesRead, NULL )) {
             printf( "Failed reading the file\n" );
         }
+        tempBuff[toRead] = '\0';
         buffer.append(tempBuff);
         free( tempBuff );
         return true;
@@ -122,10 +123,10 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
     return false;
 }
 
-bool SerialPort::WriteCommPort ( const std::string &buffer, const DWORD &size ) {
+bool SerialPort::WriteCommPort ( std::string &buffer ) {
 
     LPDWORD bytesWritten = nullptr;
-    if ( WriteFile( handleCom, buffer.c_str(), size, bytesWritten, NULL )) {
+    if ( WriteFile( handleCom, buffer.c_str(), buffer.length(), bytesWritten, NULL )) {
         return true;
     }
     ClearCommError( handleCom, &errors, &status );
