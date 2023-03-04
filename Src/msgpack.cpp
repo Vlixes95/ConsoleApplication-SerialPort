@@ -1,4 +1,5 @@
 #include "msgpack.h"
+#include <set>
 
 MSGPack::MSGPack ( std::string &com, std::string &file, std::string &cnt ) {
 
@@ -8,7 +9,7 @@ MSGPack::MSGPack ( std::string &com, std::string &file, std::string &cnt ) {
 
 }
 
-void MSGPack::Pack ( const std::string &msg, MSGPack &packMSG ) {
+void MSGPack::Pack ( MSGPack &packMSG, const std::string &msg ) {
 
     unsigned int i = 0;
     bool init = false;
@@ -64,7 +65,7 @@ void MSGPack::Pack ( const std::string &msg, MSGPack &packMSG ) {
                     packMSG.setFileName( s );
                 } else if ( elements == 2 ) {
                     std::string s( buff );
-                    packMSG.setContent( s);
+                    packMSG.setContent( s );
                 }
                 ++elements;
 
@@ -76,7 +77,7 @@ void MSGPack::Pack ( const std::string &msg, MSGPack &packMSG ) {
 
 }
 
-void MSGPack::Unpack ( const MSGPack &packMSG, std::string &msg ) {
+void MSGPack::PackToString ( const MSGPack &packMSG, std::string &msg ) {
 
     msg.append( "{" );
 
@@ -95,8 +96,34 @@ void MSGPack::Unpack ( const MSGPack &packMSG, std::string &msg ) {
     msg.append( "C" );
     msg.append( packMSG.content );
 
-    msg.append( "}\0" );
+    msg.append( "}" );
 
 }
 
+void MSGPack::PrintContent ( const std::string &msg) {
 
+    std::set < std::string > driveContent;
+
+    int element = 0;
+
+    // TODO: smart pointer
+    // TODO: recursive functon with find-----------------------------------------------------
+    int j = 0;
+    int size = 0;
+    for ( int i = 0; i < msg.length( ); ++i ) {
+        if ( msg[i] == ';' ) {
+            size = i - j;
+            char *s = ( char * ) malloc( size * sizeof( char ) + 1 ); // +1 for the null terminator
+            msg.copy( s, size, j );
+            s[size *
+              sizeof( char )] = '\0'; // string.copy does not copy the null terminator, you need to add it in order to create the string;
+            if(driveContent.emplace( s ).second)
+                std::cout << "\t" << s << "\n";
+            free( s );
+            ++i;
+            j = i;
+            ++element;
+        }
+    }
+
+}
