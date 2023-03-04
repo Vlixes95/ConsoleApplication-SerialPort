@@ -4,7 +4,9 @@
 void SerialPort::OpenCommPort ( ) {
 
 // TODO: Control string size
-    handleCom = CreateFile( static_cast<LPCSTR>(this->portName.c_str( )),
+    std::string portPathName = R"(\\.\)";
+    portPathName.append( portName );
+    handleCom = CreateFile( static_cast<LPCSTR>(portPathName.c_str( )),
                             GENERIC_READ | GENERIC_WRITE,
                             0,
                             NULL,
@@ -12,22 +14,36 @@ void SerialPort::OpenCommPort ( ) {
                             0,
                             NULL );
 
+    LPTSTR errorText = nullptr;
+    FormatMessage(
+            FORMAT_MESSAGE_FROM_SYSTEM
+            | FORMAT_MESSAGE_ALLOCATE_BUFFER
+            | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL,
+            GetLastError( ),
+            MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
+            ( LPTSTR ) &errorText,
+            0,
+            NULL );
+
     if ( handleCom == INVALID_HANDLE_VALUE) {
-        printf( "CreateFile failed with error %ld.\n", GetLastError( ));
+        std::cout << "There has been an error connecting with the COM port. Try again. \n";
+        std::cout << "CreateFile failed with following error:\n\t- " << errorText << "\n";
     } else {
+        std::cout << "Successfully connected to the com port:\n\t- " << errorText << "\n";
         connected = true;
     }
 
     // Initialize the DCB structure
     /* DCB: Define the configuration of the comm port*/
-//    SecureZeroMemory( &portConfig, sizeof( portConfig ));
+    SecureZeroMemory( &portConfig, sizeof( portConfig ));
     portConfig.DCBlength = sizeof( DCB );
 
     if ( IsConnected( )) {
         GetCommPortState( );
 
         if ( ConfigureCommPort( )) {
-            std::cout << "Serial port configuration :\n";
+            std::cout << "COMM Port configuration :\n";
             GetCommPortState( );
             PrintComPortState( );
         }
@@ -55,7 +71,7 @@ bool SerialPort::ConfigureCommPort ( ) {
 }
 
 void SerialPort::PrintComPortState ( ) {
-    printf( TEXT( "\nBaudrate=%ld, ByteSize=%d, Parity=%d, StopBits=%d\n" ),
+    printf( TEXT( "\tBaudrate: %ld, \n\tByteSize: %d, \n\tParity: %d, \n\tStopBits: %d\n" ),
             portConfig.BaudRate,
             portConfig.ByteSize,
             portConfig.Parity,
@@ -105,7 +121,7 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
     if ( status.cbInQue > 0 ) {
         if ( status.cbInQue > bytesToRead ) {
             toRead = bytesToRead;
-        } else{
+        } else {
             toRead = status.cbInQue;
         }
 
@@ -115,7 +131,7 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
             printf( "Failed reading the file\n" );
         }
         tempBuff[toRead] = '\0';
-        buffer.append(tempBuff);
+        buffer.append( tempBuff );
         free( tempBuff );
         return true;
     }
@@ -126,7 +142,7 @@ bool SerialPort::ReadCommPort ( std::string &buffer, DWORD &bytesToRead, DWORD &
 bool SerialPort::WriteCommPort ( std::string &buffer ) {
 
     LPDWORD bytesWritten = nullptr;
-    if ( WriteFile( handleCom, buffer.c_str(), buffer.length(), bytesWritten, NULL )) {
+    if ( WriteFile( handleCom, buffer.c_str( ), buffer.length( ), bytesWritten, NULL )) {
         return true;
     }
     ClearCommError( handleCom, &errors, &status );
