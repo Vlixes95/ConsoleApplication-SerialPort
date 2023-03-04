@@ -1,9 +1,9 @@
 #ifndef CONSOLEAPPLICATION_SERIALPORT_MSGPACK_H
 #define CONSOLEAPPLICATION_SERIALPORT_MSGPACK_H
 
-#include <vector>
 #include <iostream>
 
+// TODO: enum and swich statement
 const std::string READ_COMMAND = "r";
 const std::string WRITE_COMMAND = "w";
 const std::string UPDATE_COMMAND = "u";
@@ -21,9 +21,9 @@ public:
 
     explicit MSGPack ( std::string &com, std::string &file, std::string &cnt );
 
-    static void Pack ( const std::string &msg, MSGPack &packMSG );
+    static void Pack ( MSGPack &packMSG, const std::string &msg );
 
-    static void Unpack ( const MSGPack &packMSG, std::string &msg );
+    static void PackToString ( const MSGPack &packMSG, std::string &msg );
 
     std::string getCommand ( ) { return command; }
 
@@ -37,6 +37,7 @@ public:
 
     void setContent ( std::string &cnt ) { content = cnt; }
 
+    static void PrintContent ( const std::string &msg );
 };
 
 #endif //CONSOLEAPPLICATION_SERIALPORT_MSGPACK_H
