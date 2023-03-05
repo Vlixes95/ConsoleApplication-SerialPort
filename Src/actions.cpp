@@ -48,4 +48,3 @@ void AddContentToMSGPack ( MSGPack &sendPack, const std::string &election ) {
         sendPack.setContent( content );
     }
 }
-
