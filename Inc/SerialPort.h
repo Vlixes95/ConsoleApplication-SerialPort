@@ -30,6 +30,8 @@ public:
 
     void OpenCommPort ( );
 
+    void CloseCommPort ();
+
     bool ConfigureCommPort ( );
 
     void PrintComPortState ( );

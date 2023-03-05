@@ -6,6 +6,8 @@ void SerialPort::OpenCommPort ( ) {
 // TODO: Control string size
     std::string portPathName = R"(\\.\)";
     portPathName.append( portName );
+
+    // Creates or opens a file or I/O device
     handleCom = CreateFile( static_cast<LPCSTR>(portPathName.c_str( )),
                             GENERIC_READ | GENERIC_WRITE,
                             0,
@@ -69,6 +71,8 @@ bool SerialPort::ConfigureCommPort ( ) {
     }
     return true;
 }
+
+void SerialPort::CloseCommPort ( ) { CloseHandle( handleCom); }
 
 void SerialPort::PrintComPortState ( ) {
     printf( TEXT( "\tBaudrate: %ld, \n\tByteSize: %d, \n\tParity: %d, \n\tStopBits: %d\n" ),
