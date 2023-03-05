@@ -26,7 +26,7 @@ std::string ChooseAction ( ) {
     return election;
 }
 
-void AddFileNameToMSGPackByElection ( MSGPack &sendPack, const std::string &election ) {
+void AddFileNameToMSGPackByAction ( MSGPack &sendPack, const std::string &election ) {
     // TODO: control fileName length
     std::string fileName;
     if ( election != "p" ) {
