@@ -11,12 +11,11 @@ private:
 
     DCB portConfig;
     HANDLE handleCom;
+    std::string portName;
 
     bool fSuccess;
     DWORD errors;
     COMSTAT status;
-
-    std::string portName;
     bool connected;
 
 public:

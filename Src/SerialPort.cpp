@@ -30,7 +30,7 @@ void SerialPort::OpenCommPort ( ) {
         std::cout << "There has been an error connecting with the COM port. Try again. \n";
         std::cout << "CreateFile failed with following error:\n\t- " << errorText << "\n";
     } else {
-        std::cout << "Successfully connected to the com port:\n\t- " << errorText << "\n";
+        std::cout << "Successfully connected to the COM Port:\t " << GetPortName( ) << "\n";
         connected = true;
     }
 
