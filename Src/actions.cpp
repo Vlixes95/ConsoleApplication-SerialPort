@@ -26,10 +26,10 @@ std::string ChooseAction ( ) {
     return election;
 }
 
-void AddFileNameToMSGPackByAction ( MSGPack &sendPack, const std::string &election ) {
+void AddFileNameToMSGPack ( MSGPack &sendPack, const std::string &election ) {
     // TODO: control fileName length
     std::string fileName;
-    if ( election != "p" ) {
+    if ( election != PRINT_COMMAND ) {
         std::cout << "Set file path name: ";
         std::cin >> fileName;
         std::cin.clear( );

@@ -29,7 +29,7 @@ int main ( ) {
         if ( election == "q" ) { break; }
         sendPack.setCommand( election );
 
-        AddFileNameToMSGPackByAction( sendPack, election );
+        AddFileNameToMSGPack( sendPack, election );
         AddContentToMSGPack( sendPack, election );
 
         std::string sendPackedMSG;

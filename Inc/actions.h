@@ -5,7 +5,7 @@
 #include "msgpack.h"
 
 std::string ChooseAction();
-void AddFileNameToMSGPackByAction( MSGPack &sendPack, const std::string &election );
+void AddFileNameToMSGPack( MSGPack &sendPack, const std::string &election );
 void AddContentToMSGPack( MSGPack &sendPack, const std::string &election );
 
 #endif //CONSOLEAPPLICATION_SERIALPORT_ACTIONS_H
