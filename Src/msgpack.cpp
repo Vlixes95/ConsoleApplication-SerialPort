@@ -18,7 +18,7 @@ void MSGPack::Pack ( MSGPack &packMSG, const std::string &msg ) {
 
     char *characters = const_cast<char *>(msg.c_str( ));
 
-    while ( 1 ) {
+    while ( true ) {
 
         if ( characters[i] == '}' ) {
             break;
@@ -46,15 +46,16 @@ void MSGPack::Pack ( MSGPack &packMSG, const std::string &msg ) {
 
             if ( characters[i] == 'C' ) {
                 ++i;
-                //TODO try new operator
-                char *buff = ( char * ) malloc( size * sizeof( char ) + 1 ); // +1 for '\0'
-                for ( int j = 0; j < size; ++j ) {
-                    buff[j] = characters[i];
-                    if (( j + 1 ) >= size ) {
-                        buff[j + 1] = '\0';
-                        break;
+                std::string buff;
+
+                if ( size != 0 ) {
+                    for ( int j = 0; j < size; ++j ) {
+                        buff.push_back(characters[i]);
+                        if (( j + 1 ) >= size ) {
+                            break;
+                        }
+                        ++i;
                     }
-                    ++i;
                 }
 
                 if ( elements == 0 ) {
@@ -68,8 +69,6 @@ void MSGPack::Pack ( MSGPack &packMSG, const std::string &msg ) {
                     packMSG.setContent( s );
                 }
                 ++elements;
-
-                free( buff );
             }
         }
         ++i;
@@ -100,30 +99,23 @@ void MSGPack::PackToString ( const MSGPack &packMSG, std::string &msg ) {
 
 }
 
-void MSGPack::PrintContent ( const std::string &msg) {
+void MSGPack::PrintContent ( const std::string &msg ) {
 
-    std::set < std::string > driveContent;
-
-    int element = 0;
-
-    // TODO: smart pointer
-    // TODO: recursive functon with find-----------------------------------------------------
     int j = 0;
     int size = 0;
+    int element = 0;
+    std::set < std::string > driveContent;
+
     for ( int i = 0; i < msg.length( ); ++i ) {
         if ( msg[i] == ';' ) {
             size = i - j;
-            char *s = ( char * ) malloc( size * sizeof( char ) + 1 ); // +1 for the null terminator
-            msg.copy( s, size, j );
-            s[size *
-              sizeof( char )] = '\0'; // string.copy does not copy the null terminator, you need to add it in order to create the string;
-            if(driveContent.emplace( s ).second)
-                std::cout << "\t" << s << "\n";
-            free( s );
+            std::string pathFile;
+            pathFile = msg.substr(j, size);
+            if ( driveContent.emplace( pathFile ).second )
+                std::cout << "\t" << pathFile << "\n";
             ++i;
             j = i;
             ++element;
         }
     }
-
 }
