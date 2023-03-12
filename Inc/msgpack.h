@@ -37,7 +37,7 @@ public:
 
     void setContent ( std::string &cnt ) { content = cnt; }
 
-    static void PrintContent ( const std::string &msg );
+    static void PrintContent ( MSGPack &packMSGG );
 };
 
 #endif //CONSOLEAPPLICATION_SERIALPORT_MSGPACK_H

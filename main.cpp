@@ -44,8 +44,8 @@ int main ( ) {
         serialPort.ReadCommPort( stringRead, read, bytes );
 
         MSGPack::Pack( receivePack, stringRead );
-        std::cout << "Received content: \n";
-        MSGPack::PrintContent( receivePack.getContent( ));
+        std::cout << "Operation message:\n";
+        MSGPack::PrintContent( receivePack );
     }
 
     serialPort.CloseCommPort( );

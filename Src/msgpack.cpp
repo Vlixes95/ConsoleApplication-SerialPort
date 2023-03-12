@@ -50,7 +50,7 @@ void MSGPack::Pack ( MSGPack &packMSG, const std::string &msg ) {
 
                 if ( size != 0 ) {
                     for ( int j = 0; j < size; ++j ) {
-                        buff.push_back(characters[i]);
+                        buff.push_back( characters[i] );
                         if (( j + 1 ) >= size ) {
                             break;
                         }
@@ -99,23 +99,32 @@ void MSGPack::PackToString ( const MSGPack &packMSG, std::string &msg ) {
 
 }
 
-void MSGPack::PrintContent ( const std::string &msg ) {
+void MSGPack::PrintContent ( MSGPack &packMSG ) {
 
     int j = 0;
     int size = 0;
     int element = 0;
     std::set < std::string > driveContent;
+    std::string msg = packMSG.getContent( );
 
-    for ( int i = 0; i < msg.length( ); ++i ) {
-        if ( msg[i] == ';' ) {
-            size = i - j;
-            std::string pathFile;
-            pathFile = msg.substr(j, size);
-            if ( driveContent.emplace( pathFile ).second )
-                std::cout << "\t" << pathFile << "\n";
-            ++i;
-            j = i;
-            ++element;
+    if ( packMSG.getCommand( ) == "p" ) {
+        for ( int i = 0; i < packMSG.getContent( ).length( ); ++i ) {
+            if ( msg[i] == ';' ) {
+                size = i - j;
+                std::string pathFile;
+                pathFile = msg.substr( j, size );
+                if ( driveContent.emplace( pathFile ).second )
+                    std::cout << "\t" << pathFile << "\n";
+                ++i;
+                j = i;
+                ++element;
+            }
         }
+    } else if ( packMSG.getCommand( ) == "e" ) {
+        std::cout << "\t" << "Error!" << "\n";
+    } else {
+        std::cout << "\t" << "Success!" << "\n";
     }
+
+
 }
