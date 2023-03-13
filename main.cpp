@@ -29,6 +29,8 @@ int main ( ) {
         if ( election == "q" ) { break; }
         sendPack.setCommand( election );
 
+        // TODO: Add the option to put the file in a folder - We can choose a folder just by adding /<name folder>/
+
         AddFileNameToMSGPack( sendPack, election );
         AddContentToMSGPack( sendPack, election );
 

@@ -42,6 +42,11 @@ void MSGPack::Pack ( MSGPack &packMSG, const std::string &msg ) {
                 }
                 // TODO: replace strtol
                 size = atoi( tmpSize );
+                char *prtEnd;
+                // If strtol fails returns 0L
+                // Returned value is a long int
+                //TODO: Manage Conversion errors
+                size = strtol( tmpSize, &prtEnd, 10);
             }
 
             if ( characters[i] == 'C' ) {
